@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Foodstagram
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+인스타그램을 클론코딩한 개인 프로젝트 입니다. 음식 사진을 공유하는 푸드스타그램입니다. 
 
 ## Available Scripts
 
