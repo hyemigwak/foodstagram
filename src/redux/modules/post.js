@@ -3,7 +3,6 @@ import { produce } from "immer";
 import { firestore, storage } from "../../shared/firebase";
 import "moment";
 import moment from "moment";
-
 import { actionCreators as imageActions } from "./image";
 
 const SET_POST = "SET_POST";
@@ -24,19 +23,11 @@ const initialState = {
   is_loading: false,
 };
 
-// 포스트에 들어가야만 하는 기본 정보를 미리 하나 만들어요! (매번 적기는 귀찮으니까..!)
-// layout_type : a, b, c
-//  - a : 텍스트가 위, 이미지가 아래인 레이아웃
-//  - b : 텍스트가 좌측, 이미지가 우측인 레이아웃
-//  - c : 텍스트가 우측, 이미지가 좌측인 레이아웃
-// image_url : 이미지 주소
-// like_cnt : 좋아요 갯수
-// insert_dt : 작성일시
 const initialPost = {
   image_url: "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FRan9U%2Fbtq1KceUNR7%2FEThhJr6kLAEbnZRbqTenp0%2Fimg.jpg",
   contents: "",
   like_cnt: 0,
-  layout_type: "a",
+  is_like: false,
   insert_dt: moment().format("YYYY-MM-DD hh:mm:ss"),
 };
 
@@ -271,7 +262,6 @@ const getPostFB = (start = null, size = 3) => {
   };
 };
 
-
 // 게시글 하나만 가져오기
 // 상세페이지 등에 바로 접근할 때를 대비해서 게시글 하나만 가져오는 함수도 만들어요.
 const getOnePostFB = (id) => {
@@ -312,7 +302,6 @@ const deletePostFB = (id) => {
             window.alert("삭제할 수 없는 게시글이에요!");
             return;
         }
-
         const postDB = firestore.collection("post");
 
         // 게시글 id로 선택해서 삭제하기!
@@ -375,11 +364,11 @@ export default handleActions(
         }
         
       }),
-    [LOADING]: (state, action) =>
-      produce(state, (draft) => {
-        //   데이터를 가져오는 중인 지 여부를 작성합니다.
-        draft.is_loading = action.payload.is_loading;
-      }),
+      [LOADING]: (state, action) =>
+        produce(state, (draft) => {
+          //   데이터를 가져오는 중인 지 여부를 작성합니다.
+          draft.is_loading = action.payload.is_loading;
+        }),
   },
   initialState
 );

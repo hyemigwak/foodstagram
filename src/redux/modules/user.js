@@ -1,8 +1,9 @@
 import {createAction, handleActions} from "redux-actions";
 import { produce } from "immer";
 import {setCookie, getCookie, deleteCookie} from "../../shared/Cookie";
-import {auth} from "../../shared/firebase"; //로그인 필수
+import {auth, firestore} from "../../shared/firebase"; //로그인 필수
 import firebase from "firebase/app";
+import { actionCreators as likeActions } from "./like";
 
 //Action 생성하기
 const LOG_OUT = "LOG_OUT";
@@ -67,11 +68,13 @@ const loginFB = (id,pwd) => {
             .then((user) => {
                 console.log(user);
                 dispatch(setUser({user_name: user.user.displayName, id: id, user_profile:"",uid: user.user.id}));
+                dispatch(likeActions.getLikeFB(user.user.uid));
                 history.push("/");
             })
+
             .catch((error) => {
-                var errorCode = error.code;
-                var errorMessage = error.message;
+                let errorCode = error.code;
+                let errorMessage = error.message;
                 console.log(errorCode, errorMessage);
             });
         })
@@ -79,7 +82,7 @@ const loginFB = (id,pwd) => {
 }
 
 
-//user정보 받아서 firebase에 보내죠야해요!
+//user정보 받아서 firebase에 보내죠!
 const signupFB = (id,pwd,user_name) => {
     return function (dispatch, getState, {history}) {
         auth
@@ -93,11 +96,24 @@ const signupFB = (id,pwd,user_name) => {
             }).then(()=>{
                 //닉넴까지 업뎃해주고 나면 드뎌 이제 로그인 시켜줘야한다! 
                 //로그인할때 넘겨줄 정보는? 프로필/닉네임/id
-                dispatch(setUser({user_name: user.user.displayName, id:id,user_profile: '', uid: user.user.uid}));
+                dispatch(setUser({user_name: user.user.displayName, id:id, user_profile: '', uid: user.user.uid}));
                 history.push('/');
             }).catch((error)=>{
                 console.log(error);
             });
+
+            const likeDB = firestore.collection("like");
+            likeDB
+            .doc(user.user.uid)
+            .set({
+                like_list: [],
+            })
+            .then(()=>{
+            })
+            .catch((error)=>{
+                console.log(error);
+            });
+
         })
         .catch((error) => {
             var errorCode = error.code;

@@ -8,6 +8,8 @@ import { connectRouter } from "connected-react-router";
 import User from "./modules/user";
 import Post from "./modules/post";
 import Image from "./modules/image";
+import Like from "./modules/like";
+import Comment from "./modules/comment";
 
 // 브라우저 히스토리를 만듭니다.
 export const history = createBrowserHistory();
@@ -17,6 +19,8 @@ const rootReducer = combineReducers({
   user: User,
   post: Post,
   image: Image,
+  like: Like,
+  comment: Comment,
   router: connectRouter(history),
 });
 

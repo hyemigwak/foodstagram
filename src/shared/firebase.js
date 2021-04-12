@@ -14,7 +14,13 @@ const firebaseConfig = {
     measurementId: "G-LG06DPKQDG"
 };
 
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}else {
+    firebase.app(); // if already initialized, use that one
+}
+
+// firebase.initializeApp(firebaseConfig);
 
 const apiKey = "AIzaSyC1MGJWD8XdbcFvNctouvg9Uz0nJ-U12cc";
 const auth = firebase.auth();
